@@ -48,3 +48,32 @@ values (1, 3),
        (3, 1),
        (4, 2);
 
+insert into permissions(name)
+values  ('ADD_COMMENT'),
+        ('VIEW_BOOKS_LIST'),
+        ('CREATE_BOOK'),
+        ('VIEW_PERSONS_LIST'),
+        ('VIEW_PERSON'),
+        ('UPDATE_PERSON'),
+        ('VIEW_MY_PROFILE'),
+        ('RATE_BOOK');
+
+insert into role_to_permissions(roleId,permissionId)
+values  (1,1),
+        (1,2),
+        (1,3),
+        (1,4),
+        (1,5),
+        (1,6),
+        (1,7),
+        (1,8),
+        (2,1),
+        (2,2),
+        (2,3),
+        (2,4),
+        (2,7),
+        (2,8),
+        (3,1),
+        (3,2),
+        (3,7),
+        (3,8);
