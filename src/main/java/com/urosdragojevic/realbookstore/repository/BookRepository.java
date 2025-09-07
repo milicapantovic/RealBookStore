@@ -36,12 +36,12 @@ public class BookRepository {
                 bookList.add(book);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error("Getting all books failed!", e);
         }
         return bookList;
     }
 
-    public List<Book> search(String searchTerm) throws SQLException {
+    public List<Book> search(String searchTerm) {
         List<Book> bookList = new ArrayList<>();
         String query = "SELECT DISTINCT b.id, b.title, b.description, b.author FROM books b, books_to_genres bg, genres g" +
                 " WHERE b.id = bg.bookId" +
@@ -54,6 +54,8 @@ public class BookRepository {
             while (rs.next()) {
                 bookList.add(createBookFromResultSet(rs));
             }
+        } catch(SQLException e){
+            LOG.error("Search book for searchTerm failed!", e);
         }
         return bookList;
     }
@@ -67,7 +69,7 @@ public class BookRepository {
                 return createBookFromResultSet(rs);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error("Getting book by ID failed!, e");
         }
         return null;
     }
@@ -94,12 +96,12 @@ public class BookRepository {
                         statement2.setInt(2, genre.getId());
                         statement2.executeUpdate();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        LOG.error("Creating new book failed!", e);
                     }
                 });
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error("Creating new book failed!", e);
         }
         return id;
     }
@@ -117,7 +119,7 @@ public class BookRepository {
             statement.executeUpdate(query3);
             statement.executeUpdate(query4);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error("Deleting book by ID failed", e);
         }
     }
 
