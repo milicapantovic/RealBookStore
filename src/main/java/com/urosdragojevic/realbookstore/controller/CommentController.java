@@ -1,5 +1,6 @@
 package com.urosdragojevic.realbookstore.controller;
 
+import com.urosdragojevic.realbookstore.audit.AuditLogger;
 import com.urosdragojevic.realbookstore.domain.Comment;
 import com.urosdragojevic.realbookstore.domain.User;
 import com.urosdragojevic.realbookstore.repository.CommentRepository;
@@ -14,7 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Controller
 public class CommentController {
     private static final Logger LOG = LoggerFactory.getLogger(CommentController.class);
-
+    private static final AuditLogger auditLogger = AuditLogger.getAuditLogger(CommentController.class);
     private CommentRepository commentRepository;
 
     public CommentController(CommentRepository commentRepository) {
@@ -27,7 +28,7 @@ public class CommentController {
         User user = (User) authentication.getPrincipal();
         comment.setUserId(user.getId());
         commentRepository.create(comment);
-
+        auditLogger.audit("Added comment "+ comment.toString());
         return "redirect:/books/" + comment.getBookId();
     }
 }

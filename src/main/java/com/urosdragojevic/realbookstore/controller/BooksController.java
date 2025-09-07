@@ -1,5 +1,6 @@
 package com.urosdragojevic.realbookstore.controller;
 
+import com.urosdragojevic.realbookstore.audit.AuditLogger;
 import com.urosdragojevic.realbookstore.domain.*;
 import com.urosdragojevic.realbookstore.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+
 
 @Controller
 public class BooksController {
@@ -30,6 +33,8 @@ public class BooksController {
 
     @Autowired
     private PersonRepository personRepository;
+
+    private static final AuditLogger auditLogger = AuditLogger.getAuditLogger(BooksController.class);
 
     @GetMapping({"/", "/books"})
     @PreAuthorize("hasAuthority('VIEW_BOOKS_LIST')")
@@ -88,6 +93,7 @@ public class BooksController {
         List<Genre> genreList = this.genreRepository.getAll();
         List<Genre> genresToInsert = book.getGenres().stream().map(bookGenreId -> genreList.stream().filter(genre -> genre.getId() == bookGenreId).findFirst().get()).collect(Collectors.toList());
         long id = bookRepository.create(book, genresToInsert);
+        auditLogger.audit("Created book "+book.toString());
         return "redirect:/books?id=" + id;
     }
 }
